@@ -18,7 +18,7 @@ void setup() {
   colorMode(HSB);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  populationSize = 1;
+  populationSize = 100;
   mutationRate = 0.01;
   terrain = new Terrain(populationSize);
   time = 0;
@@ -26,7 +26,10 @@ void setup() {
 
 void draw() {
   background(156, 189, 255);
-  box2d.step();
-  time+= 0.1;
+  for (int i = 0; i < 10; i++) {
+    box2d.step();
+    time += 0.1;
+    terrain.step();
+  }
   terrain.display();
 }
