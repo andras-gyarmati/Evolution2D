@@ -12,24 +12,36 @@ Terrain terrain;
 float mutationRate;
 int populationSize;
 float time;
+Slider slider;
+
+/*
+save, load, knob es muscle eltunes es uj novesztese, tobb dolog is tudjon mutalodni rajtuk 
+es minden egyes dolog kulon lehetoseggel mutalodjon, jobb kivalogatas kell
+*/
 
 void setup() {
   size(1280, 720, P2D);
   colorMode(HSB);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  populationSize = 100;
-  mutationRate = 0.01;
+  populationSize = 1000;
+  mutationRate = 0.03;
   terrain = new Terrain(populationSize);
   time = 0;
+  slider = new Slider(370, 120, 700, 20);
 }
 
 void draw() {
-  background(156, 189, 255);
-  for (int i = 0; i < 10; i++) {
+  background(156, 100, 150);
+  for (int i = 0; i < slider.getValue(); i++) {
     box2d.step();
     time += 0.1;
     terrain.step();
   }
   terrain.display();
+  slider.display();
+}
+
+void mouseDragged() {
+  slider.update(new PVector(mouseX, mouseY));
 }

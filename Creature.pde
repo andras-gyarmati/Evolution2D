@@ -12,7 +12,7 @@ class Creature {
   private Creature() {
     fitness = 0;
     relProb = 0;
-    mutationAmount = 0.1;
+    mutationAmount = 0.3;
   }
 
   //Creature(boolean debug) {
@@ -164,21 +164,21 @@ class Creature {
   void mutate(Creature offspring) { //knob hozzaadas elvetel, muscle hozzaadas elvetel
     for (Knob k : offspring.knobs) {
       if (random(1) < mutationRate) {
-        k.density += randomMutationAmount();
-        k.friction += randomMutationAmount();
-        k.restitution += randomMutationAmount();
+        k.density = randomMutationAmount(k.density);
+        k.friction = randomMutationAmount(k.friction);
+        k.restitution = randomMutationAmount(k.restitution);
       }
     }
     for (Muscle m : offspring.muscles) {
       if (random(1) < mutationRate) {
-        m.frequencyHz += randomMutationAmount();
-        m.dampingRatio += randomMutationAmount();
+        m.frequencyHz = randomMutationAmount(m.frequencyHz);
+        m.dampingRatio = randomMutationAmount(m.dampingRatio);
       }
     }
   }
 
-  private float randomMutationAmount() {
-    return random(-mutationAmount, mutationAmount);
+  private float randomMutationAmount(float currentAmount) {
+    return max(0, min(1, currentAmount + random(-mutationAmount, mutationAmount)));
   }
 
   void calcFitness() {

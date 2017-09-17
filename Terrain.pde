@@ -28,7 +28,7 @@ class Terrain {
   void displayPopCount() {
     textSize(30);
     fill(0);
-    text("popCount: " + popCount, 100, 200);
+    text("population: #" + popCount, 100, 200);
   }
 
   void step() { //<>// //<>//

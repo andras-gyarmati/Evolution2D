@@ -59,7 +59,7 @@ class Knob {
     stroke(map(body.getFixtureList().getFriction(), 0, 1, 255, 0));
     strokeWeight(map(body.getFixtureList().getRestitution(), 0, 1, 1, 3));
     ellipse(0, 0, radius * 2, radius * 2);
-    line(0, 0, radius, 0);
+    //line(0, 0, radius, 0);
     popMatrix();
   }
   

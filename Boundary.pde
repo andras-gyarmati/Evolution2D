@@ -35,7 +35,7 @@ class Boundary {
   }
 
   void display() {
-    fill(100, 189, 255);
+    fill(100, 0, 50);
     noStroke();
     rectMode(CENTER);
     rect(x, y, w, h);

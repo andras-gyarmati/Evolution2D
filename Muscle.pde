@@ -36,7 +36,7 @@ class Muscle {
   void display() {
     Vec2 pos1 = box2d.getBodyPixelCoord(k1.body);
     Vec2 pos2 = box2d.getBodyPixelCoord(k2.body);
-    stroke(0, 255, map(dj.getDampingRatio(), 0, 1, 255, 10));
+    stroke(0, map(dj.getDampingRatio(), 0, 1, 255, 10), 255, 180);
     strokeWeight(map(dj.getFrequency(), 0, 1, 10, 20));
     line(pos1.x, pos1.y, pos2.x, pos2.y);
   }

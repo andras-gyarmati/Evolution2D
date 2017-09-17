@@ -21,7 +21,7 @@ class Population {
     this();
     creatures = new ArrayList<Creature>();
     for (int i = 0; i < size; i++) {
-      creatures.add(new Creature(floor(random(3, 6)), floor(random(3, 36))));
+      creatures.add(new Creature(floor(random(3, 4)), floor(random(3, 36))));
       //creatures.add(new Creature(true));
     }
     currentCreature = creatures.get(0);
@@ -86,7 +86,7 @@ class Population {
   void displayCreatureCount() {
     textSize(30);
     fill(0);
-    text("creature No: #" + creatureCount, 100, 150);
+    text("creature: #" + creatureCount, 100, 150);
   }
 
   void step() {
