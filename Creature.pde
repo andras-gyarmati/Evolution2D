@@ -8,31 +8,17 @@ class Creature {
   float startPosition;
   float finishPosition;
   float mutationAmount;
+  float maxPhysicsValue;
+  int minKnobRadius, maxKnobRadius;
 
   private Creature() {
     fitness = 0;
     relProb = 0;
     mutationAmount = 0.3;
+    minKnobRadius = 12;
+    maxKnobRadius = 17;
+    maxPhysicsValue = 1;
   }
-
-  //Creature(boolean debug) {
-  //  this();
-  //  knobs = new ArrayList<Knob>();
-  //  muscles = new ArrayList<Muscle>();
-
-  //  knobs.add(new Knob(350, 420, /*density*/ 1, /*friction*/ 0, /*restitution*/ 0, /*radius*/ 6));
-  //  knobs.add(new Knob(220, 550, /*density*/ 1, /*friction*/ 1, /*restitution*/ 0, /*radius*/ 6));
-  //  knobs.add(new Knob(390, 550, /*density*/ 1, /*friction*/ 0, /*restitution*/ 0, /*radius*/ 6));
-
-  //  muscles.add(new Muscle(knobs.get(0), knobs.get(1), /*Hz*/ 1, /*damping*/ 1));
-  //  knobs.get(0).addPair(knobs.get(1));
-
-  //  muscles.add(new Muscle(knobs.get(1), knobs.get(2), /*Hz*/ 1, /*damping*/ 1));
-  //  knobs.get(1).addPair(knobs.get(2));
-
-  //  muscles.add(new Muscle(knobs.get(2), knobs.get(0), /*Hz*/ 0, /*damping*/ 0));
-  //  knobs.get(2).addPair(knobs.get(0));
-  //}
 
   Creature(ArrayList<Knob> knobs, ArrayList<Muscle> muscles) {
     this();
@@ -40,40 +26,14 @@ class Creature {
     this.muscles = muscles;
   }
 
-  //Creature(int knobCount, int muscleCount) {
-  //  this();
-  //  knobs = new ArrayList<Knob>();
-  //  muscles = new ArrayList<Muscle>();
-
-  //  for (int i = 0; i < knobCount; i++) {
-  //    knobs.add(new Knob(random(210, 400), random(410, 640), random(1), random(1), random(1), random(15, 20)));
-  //  }
-
-  //  for (int i = 0; i < min(muscleCount, (knobCount * (knobCount - 1)) / 2); i++) {
-  //    Knob k1 = null;
-  //    Knob k2 = null;
-  //    while (k2 == null) {
-  //      k1 = knobs.get(floor(random(knobs.size())));
-  //      Knob knob = knobs.get(floor(random(knobs.size())));
-  //      if (k1 != knob && !k1.pairs.contains(knob)) {
-  //        k2 = knob;
-  //      }
-  //    }
-  //    muscles.add(new Muscle(k1, k2, random(1), random(1)));
-  //    k1.addPair(k2);
-  //  }
-  //}
-
-  Creature(int knobCount, int muscleCount) {
+  Creature(int knobCount, PVector minSpawnPos, PVector maxSpawnPos) {
     this();
     knobs = new ArrayList<Knob>();
     muscles = new ArrayList<Muscle>();
-
     for (int i = 0; i < knobCount; i++) {
-      knobs.add(new Knob(random(210, 400), random(410, 640), random(1), random(1), random(1), random(15, 20)));
+      knobs.add(new Knob(random(minSpawnPos.x, minSpawnPos.y), random(maxSpawnPos.x, maxSpawnPos.y), random(maxPhysicsValue), random(maxPhysicsValue), random(maxPhysicsValue), random(minKnobRadius, maxKnobRadius)));
     }
-
-    for (int i = 0; i < min(muscleCount, (knobCount * (knobCount - 1)) / 2); i++) {
+    for (int i = 0; i < random(knobCount, (knobCount * (knobCount - 1)) / 2); i++) {
       Knob k1 = null;
       Knob k2 = null;
       while (k2 == null) {
@@ -142,8 +102,13 @@ class Creature {
       k.display();
     }
     for (Muscle m : muscles) {
-      m.move();
       m.display();
+    }
+  }
+
+  void move() {
+    for (Muscle m : muscles) {
+      m.move();
     }
     calcFitness();
   }
@@ -161,17 +126,24 @@ class Creature {
     return offspring;
   }
 
-  void mutate(Creature offspring) { //knob hozzaadas elvetel, muscle hozzaadas elvetel
+  //TODO knob hozzaadas elvetel, muscle hozzaadas elvetel
+  void mutate(Creature offspring) { 
     for (Knob k : offspring.knobs) {
       if (random(1) < mutationRate) {
         k.density = randomMutationAmount(k.density);
+      }
+      if (random(1) < mutationRate) {
         k.friction = randomMutationAmount(k.friction);
+      }
+      if (random(1) < mutationRate) {
         k.restitution = randomMutationAmount(k.restitution);
       }
     }
     for (Muscle m : offspring.muscles) {
       if (random(1) < mutationRate) {
         m.frequencyHz = randomMutationAmount(m.frequencyHz);
+      }
+      if (random(1) < mutationRate) {
         m.dampingRatio = randomMutationAmount(m.dampingRatio);
       }
     }
@@ -182,19 +154,28 @@ class Creature {
   }
 
   void calcFitness() {
+    float highestKnobHeight = 0;
+    float lowestKnobHeight = height;
+    float midKnobHeight;
     for (Knob k : knobs) {
-      if (k.getPos().x > fitness) {
-        fitness = k.getPos().x;
+      if (k.getPos().y > highestKnobHeight) {
+        highestKnobHeight = k.getPos().y;
+      }
+      if (k.getPos().y < lowestKnobHeight) {
+        lowestKnobHeight = k.getPos().y;
       }
     }
-    float sumY = 0;
-    for (Knob k : knobs) {
-      sumY += k.getPos().y;
-    }
-    if (sumY / knobs.size() > 610) {
+    midKnobHeight = highestKnobHeight - lowestKnobHeight;
+    if (midKnobHeight > maxKnobRadius - minKnobRadius) {
+      println("avgY: " + midKnobHeight);
+      float sumX = 0;
+      for (Knob k : knobs) {
+        sumX += k.getPos().x;
+      }
+      fitness = sumX / knobs.size();
+    } else {
       fitness = 0;
-      println("knob Y avg: " + sumY / knobs.size());
     }
-    println("fitness: " + fitness);
+    println("f: " + fitness);
   }
 }

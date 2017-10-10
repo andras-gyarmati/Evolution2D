@@ -1,21 +1,17 @@
-class Terrain {
+class Terrain { //<>//
 
   ArrayList<Boundary> boundaries;
   Population population;
   int popCount;
-  //Population nextPopulation;
-
+  
   Terrain(int populationSize) {
     boundaries = new ArrayList<Boundary>();
     boundaries.add(new Boundary(width/2, height-45, width * 10, 90));
-    population = new Population(populationSize);
+    PVector minSpawnPos = new PVector(width / 5, boundaries.get(0).y - height/3); 
+    PVector maxSpawnPos = new PVector(width / 3, boundaries.get(0).y - boundaries.get(0).h);
+    population = new Population(populationSize, minSpawnPos, maxSpawnPos);
     popCount = 0;
-    //nextPopulation = new Population(populationSize);
   }
-
-  //void newPopulation() {
-  //  nextPopulation = population.reproduce();
-  //}
 
   void display() {
     for (Boundary b : boundaries) {
@@ -31,7 +27,7 @@ class Terrain {
     text("population: #" + popCount, 100, 200);
   }
 
-  void step() { //<>// //<>//
+  void step() {
     population.step();
     if (population.creatureCount == population.creatures.size()) {
       population = population.reproduce();

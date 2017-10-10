@@ -20,15 +20,17 @@ es minden egyes dolog kulon lehetoseggel mutalodjon, jobb kivalogatas kell
 */
 
 void setup() {
+  //fullScreen(P2D);
   size(1280, 720, P2D);
   colorMode(HSB);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  populationSize = 1000;
-  mutationRate = 0.03;
+  box2d.setGravity(0, -20);
+  populationSize = 500;
+  mutationRate = 0.05;
   terrain = new Terrain(populationSize);
   time = 0;
-  slider = new Slider(370, 120, 700, 20);
+  slider = new Slider(370, 120, width - 420, 20, 1, 1000);
 }
 
 void draw() {
