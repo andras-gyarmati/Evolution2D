@@ -13,7 +13,7 @@ class Terrain { //<>//
     popCount = 0;
   }
 
-  void display() {
+  void display() { //TODO kamera mozog, kis hosszjelzesek mutatjak hol jarunk
     for (Boundary b : boundaries) {
       b.display();
     }

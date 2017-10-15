@@ -1,4 +1,4 @@
-class Population { //<>// //<>// //<>//
+class Population {   //<>//
 
   ArrayList<Creature> creatures;
   Creature currentCreature;
@@ -32,7 +32,7 @@ class Population { //<>// //<>// //<>//
     return new Population(pickByFitness());
   }
 
-  ArrayList<Creature> pickByFitness() {
+  ArrayList<Creature> pickByFitness() { //negativra mit dob? jobb kivalogatas kene
     ArrayList<Creature> picked = new ArrayList<Creature>();
     for (int j = 0; j < creatures.size(); j++) {
       float sum = 0;

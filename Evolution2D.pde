@@ -30,7 +30,7 @@ void setup() {
   mutationRate = 0.05;
   terrain = new Terrain(populationSize);
   time = 0;
-  slider = new Slider(370, 120, width - 420, 20, 1, 1000);
+  slider = new Slider(370, 120, width - 420, 20, 1, 700);
 }
 
 void draw() {

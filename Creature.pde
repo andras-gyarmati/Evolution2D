@@ -1,4 +1,4 @@
-class Creature {
+class Creature { //TODO az egeszet atgondolni ugy hogy nem a kepernyon mennyit mozog hanem a vilagban, es kovetni a kameraval
 
   ArrayList<Knob> knobs;
   ArrayList<Muscle> muscles;
@@ -26,7 +26,7 @@ class Creature {
     this.muscles = muscles;
   }
 
-  Creature(int knobCount, PVector minSpawnPos, PVector maxSpawnPos) {
+  Creature(int knobCount, PVector minSpawnPos, PVector maxSpawnPos) { //TODO szepiteni, ne lehessen olyan knob ami nem kapcsolodik
     this();
     knobs = new ArrayList<Knob>();
     muscles = new ArrayList<Muscle>();
@@ -46,6 +46,14 @@ class Creature {
       muscles.add(new Muscle(k1, k2, random(1), random(1)));
       k1.addPair(k2);
     }
+  }
+
+  private float calcPosX() {
+    float sumX = 0;
+    for (Knob k : knobs) {
+      sumX += k.getPos().x;
+    }
+    return sumX / knobs.size();
   }
 
   Knob pickRandomKnobWithLeastConnections() {
@@ -95,6 +103,7 @@ class Creature {
     for (Muscle m : muscles) {
       m.create();
     }
+    startPosition = calcPosX();    
   }
 
   void display() {
@@ -153,7 +162,16 @@ class Creature {
     return max(0, min(1, currentAmount + random(-mutationAmount, mutationAmount)));
   }
 
-  void calcFitness() {
+  void calcFitness() { //csak az elete vegen meghivni
+    //if (isFlat()) {
+    fitness = calcPosX() - startPosition;
+    //} else {
+    //  fitness = 0;
+    //}
+    println("f: " + fitness);
+  }
+
+  private boolean isFlat() {
     float highestKnobHeight = 0;
     float lowestKnobHeight = height;
     float midKnobHeight;
@@ -166,16 +184,6 @@ class Creature {
       }
     }
     midKnobHeight = highestKnobHeight - lowestKnobHeight;
-    if (midKnobHeight > maxKnobRadius - minKnobRadius) {
-      println("avgY: " + midKnobHeight);
-      float sumX = 0;
-      for (Knob k : knobs) {
-        sumX += k.getPos().x;
-      }
-      fitness = sumX / knobs.size();
-    } else {
-      fitness = 0;
-    }
-    println("f: " + fitness);
+    return midKnobHeight > maxKnobRadius - minKnobRadius;
   }
 }
